@@ -111,26 +111,37 @@ onPageMotion(({ reduced }) => {
   });
 });
 
-// Scroll-scaled circle (Bermito-style). Pinned scrub on desktop mouse devices only;
-// mobile, touch and reduced motion get the static cyan section. matchMedia sets it up
-// or tears it down (pin spacer included) whenever the viewport crosses the breakpoint,
-// so resizing to mobile never leaves an empty pinned gap.
+// Scroll-scaled circle (Bermito-style). Reduced motion gets the static cyan section.
+// Desktop (mouse, >1000px): pinned scrub. Mobile/touch: the circle grows as the
+// section scrolls into view, without pinning, so there's no extra scroll space.
+// matchMedia rebuilds the right version (pin spacer included) whenever the
+// viewport crosses the breakpoint.
 onPageMotion(() => {
   const section = document.querySelector<HTMLElement>('[data-statement]');
   if (!section) return;
   const circle = section.querySelector('[data-statement-circle]');
   const text = section.querySelector('[data-statement-text]');
 
-  const mm = gsap.matchMedia();
-  mm.add('(min-width: 1001px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
+  const grow = (scrollTrigger: ScrollTrigger.Vars) =>
     gsap
-      .timeline({
-        scrollTrigger: { trigger: section, start: 'top top', end: '+=120%', scrub: true, pin: true },
-      })
+      .timeline({ scrollTrigger })
       .fromTo(circle, { scale: 0.04 }, { scale: 1, ease: 'power2.in', duration: 1 })
-      // Text comes in once the circle covers the screen, so it never spills past the edge.
+      // Text comes in once the circle covers the section, so it never spills past the edge.
       .fromTo(text, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.8);
-  });
+
+  const mm = gsap.matchMedia();
+  mm.add(
+    {
+      desktop: '(min-width: 1001px) and (hover: hover) and (pointer: fine)',
+      motion: '(prefers-reduced-motion: no-preference)',
+    },
+    (ctx) => {
+      const { desktop, motion } = ctx.conditions as { desktop: boolean; motion: boolean };
+      if (!motion) return;
+      if (desktop) grow({ trigger: section, start: 'top top', end: '+=120%', scrub: true, pin: true });
+      else grow({ trigger: section, start: 'top 85%', end: 'bottom 75%', scrub: true });
+    },
+  );
   return () => mm.revert();
 });
 
