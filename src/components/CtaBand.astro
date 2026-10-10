@@ -4,13 +4,29 @@ interface Props {
   text?: string;
   href?: string;
   label?: string;
+  /** Giant uppercase line instead of the cyan band (home page). */
+  giant?: boolean;
 }
 const {
   text = 'Message us on WhatsApp for the next batch dates, or visit the academy in Kalamassery.',
   href = '/contact',
   label = 'Enroll Now',
+  giant = false,
 } = Astro.props;
 ---
+
+{
+  giant ? (
+    <div class="cta-giant">
+      <h2 class="cta-giant__title" data-split>
+        <slot />
+      </h2>
+      <div class="cta-giant__row">
+        <p>{text}</p>
+        <Button href={href}>{label}</Button>
+      </div>
+    </div>
+  ) : (
 
 <div class="cta-band">
   <div class="cta-band__text">
@@ -19,6 +35,8 @@ const {
   </div>
   <Button href={href} variant="dark">{label}</Button>
 </div>
+  )
+}
 
 <style>
   .cta-band {
@@ -41,7 +59,27 @@ const {
   .cta-band__title :global(em) { font-style: italic; }
   .cta-band p { margin-top: 14px; font-size: 18px; font-weight: 500; max-width: 560px; }
 
+  .cta-giant { display: flex; flex-direction: column; gap: 40px; }
+  .cta-giant__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(44px, 8.2vw, 124px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+  }
+  .cta-giant__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .cta-giant__row p { max-width: 520px; font-size: 18px; color: var(--muted); }
+
   @media (max-width: 1000px) {
+    .cta-giant__row { flex-direction: column; align-items: flex-start; }
     .cta-band { flex-direction: column; align-items: flex-start; padding: 40px 28px; gap: 28px; }
     .cta-band__title { font-size: 32px; }
   }

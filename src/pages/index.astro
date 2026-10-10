@@ -9,6 +9,7 @@ import ModuleList from '../components/ModuleList.astro';
 import StepItem from '../components/StepItem.astro';
 import NewsCard from '../components/NewsCard.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Statement from '../components/Statement.astro';
 import { program } from '../data/program';
 import { whatsappLink } from '../data/site';
 import { getNews, NEWS_ATTRIBUTION } from '../data/news';
@@ -91,6 +92,8 @@ const rotating = ['clarity', 'discipline', 'a plan', 'confidence'];
     </div>
   </section>
 
+  <Statement />
+
   <!-- How it works -->
   <section class="screen bg-dark">
     <div class="container">
@@ -137,7 +140,7 @@ const rotating = ['clarity', 'discipline', 'a plan', 'confidence'];
     </div>
   </section>
 
-  <CtaBand slot="cta">Start trading with a <em>plan.</em></CtaBand>
+  <CtaBand slot="cta" giant>Start trading with a plan.</CtaBand>
 </Base>
 
 <style>

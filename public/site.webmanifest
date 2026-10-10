@@ -1,0 +1,8 @@
+{
+  "name": "Tradot Academy",
+  "short_name": "Tradot",
+  "icons": [{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }],
+  "theme_color": "#0B1117",
+  "background_color": "#0B1117",
+  "display": "browser"
+}

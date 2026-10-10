@@ -42,7 +42,9 @@ function parse(xml: string, source: NewsSource): NewsItem[] {
       const title = tag(item, 'title');
       const link = tag(item, 'link');
       const raw = tag(item, 'pubDate');
-      const date = raw ? new Date(raw) : null;
+      // Investing.com sends "YYYY-MM-DD HH:MM:SS" with no zone; it's GMT.
+      const iso = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(raw) ? `${raw.replace(' ', 'T')}Z` : raw;
+      const date = raw ? new Date(iso) : null;
       return { title, link, source, date: date && !isNaN(+date) ? date : null };
     })
     .filter((n) => n.title && /^https?:\/\//.test(n.link));
@@ -62,13 +64,33 @@ async function fetchFeed(source: NewsSource, url: string): Promise<NewsItem[]> {
   }
 }
 
+// Last good data: the live site publishes /news.json from its previous build.
+// If both feeds fail, reuse those headlines instead of showing nothing.
+async function fetchLastGood(): Promise<NewsItem[]> {
+  const site = import.meta.env.SITE;
+  if (!site) return [];
+  try {
+    const res = await fetch(new URL('/news.json', site), { signal: AbortSignal.timeout(TIMEOUT_MS) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = (await res.json()) as { items: (Omit<NewsItem, 'date'> & { date: string | null })[] };
+    console.warn(`[news] using last good data from ${site}`);
+    return data.items.map((n) => ({ ...n, date: n.date ? new Date(n.date) : null }));
+  } catch (err) {
+    console.warn(`[news] no last good data: ${(err as Error).message}`);
+    return [];
+  }
+}
+
 let cache: Promise<NewsItem[]> | null = null;
 
 /** All headlines, newest first. Fetched once per build. */
 export function getNews(): Promise<NewsItem[]> {
-  cache ??= Promise.all(FEEDS.map((f) => fetchFeed(f.source, f.url))).then((lists) =>
-    lists.flat().sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0)),
-  );
+  cache ??= Promise.all(FEEDS.map((f) => fetchFeed(f.source, f.url)))
+    .then(async (lists) => {
+      const items = lists.flat();
+      return items.length ? items : fetchLastGood();
+    })
+    .then((items) => items.sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0)).slice(0, 40));
   return cache;
 }
 

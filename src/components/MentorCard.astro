@@ -8,7 +8,7 @@ const { name, role, photo } = Astro.props;
 ---
 
 <article class="mentor" data-reveal>
-  <div class="mentor__photo">
+  <div class="mentor__photo" data-img-reveal>
     {photo ? <img src={photo} alt={name} loading="lazy" /> : <span class="label">Photo coming soon</span>}
   </div>
   <p class="label mentor__role">{role}</p>
@@ -30,6 +30,6 @@ const { name, role, photo } = Astro.props;
   }
   :global(.bg-dark) .mentor__photo { background: var(--ink-raised); color: var(--on-dark-muted); }
   .mentor__photo img { width: 100%; height: 100%; object-fit: cover; }
-  .mentor__role { color: var(--cyan); }
+  .mentor__role { color: var(--accent); }
   .mentor__name { font-size: var(--fs-card); font-weight: 700; line-height: 1.3; }
 </style>

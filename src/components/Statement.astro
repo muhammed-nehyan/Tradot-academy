@@ -1,0 +1,57 @@
+---
+// Bermito-style reveal: a cyan circle grows with scroll to uncover the statement.
+// Without JS (or with reduced motion / touch) it's simply a cyan section.
+import { program } from '../data/program';
+---
+
+<section class="statement" data-statement aria-label="Program at a glance">
+  <div class="statement__circle" data-statement-circle aria-hidden="true"></div>
+  <div class="container statement__inner" data-statement-text>
+    <p class="label statement__label">One program · {program.level}</p>
+    <p class="statement__text">
+      {program.feeDisplay}<span aria-hidden="true"> · </span><br class="statement__br" />{program.durationDisplay}<span
+        aria-hidden="true"> · </span><br class="statement__br" />Basic to Advance
+    </p>
+    <p class="statement__sub">Live from day 1. Online and offline in Kalamassery, Kochi.</p>
+  </div>
+</section>
+
+<style>
+  .statement {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--ink);
+  }
+  .statement__circle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 160vmax;
+    height: 160vmax;
+    margin: -80vmax 0 0 -80vmax;
+    border-radius: 50%;
+    background: var(--cyan);
+    will-change: transform;
+  }
+  .statement__inner { position: relative; text-align: center; display: flex; flex-direction: column; gap: 24px; align-items: center; }
+  .statement__text {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(44px, 7.4vw, 112px);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+  .statement__br { display: none; }
+  .statement__sub { font-size: 18px; font-weight: 600; }
+
+  @media (max-width: 1000px) {
+    .statement { min-height: 0; padding: 96px 0; }
+    .statement__br { display: inline; }
+    .statement__text span { display: none; }
+  }
+</style>

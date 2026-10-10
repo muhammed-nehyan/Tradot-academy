@@ -1,0 +1,61 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../data/site';
+import { program } from '../data/program';
+// TODO(client): confirm payment, refund and batch-transfer rules, then have this reviewed by your legal advisor.
+---
+
+<Legal
+  title="Terms & Conditions"
+  description="Terms for using the Tradot Academy website and enrolling in the stock market trading program."
+  updated="10 October 2026"
+>
+  <p>
+    These terms apply to your use of this website and to enrolment in programs run by Tradot Academy, {site.location}.
+    By using the website or enrolling, you agree to them.
+  </p>
+
+  <h2>Education only</h2>
+  <p class="callout">{site.disclaimer}</p>
+  <p>
+    Our program teaches concepts, methods and risk management. Any examples, chart studies or trades discussed in
+    class are for learning only and are not recommendations to buy or sell any security. You are solely responsible
+    for your own trading and investment decisions. See our <a href="/disclaimer">Disclaimer</a> for more.
+  </p>
+
+  <h2>Enrolment and fees</h2>
+  <ul>
+    <li>The current program fee is {program.feeDisplay} for the {program.durationDisplay} program, unless we confirm otherwise in writing.</li>
+    <li>Your seat in a batch is confirmed once we receive your fee and confirm your batch.</li>
+    <li>Batch dates, timings and mode (online or offline) are shared when you enrol and may change with notice.</li>
+    <li>Refund and batch-transfer requests are handled as agreed at the time of enrolment.</li>
+  </ul>
+
+  <h2>Classes and conduct</h2>
+  <ul>
+    <li>Class materials, recordings and resources are for your personal learning only. Do not share, resell or publish them.</li>
+    <li>Please be respectful to mentors and other students. We may remove anyone who disrupts classes or misuses batch groups.</li>
+  </ul>
+
+  <h2>Website content</h2>
+  <p>
+    The text, design, logo and materials on this website belong to Tradot Academy unless stated otherwise. Market news
+    headlines belong to their publishers (Moneycontrol and Investing.com) and link to the original articles.
+  </p>
+  <p>
+    We try to keep information on this website accurate and up to date, but we do not guarantee it is complete or
+    free from errors.
+  </p>
+
+  <h2>Limitation of liability</h2>
+  <p>
+    To the extent allowed by law, Tradot Academy is not liable for any trading or investment losses, or for any
+    indirect loss, arising from use of this website, our classes or our materials.
+  </p>
+
+  <h2>Governing law</h2>
+  <p>These terms are governed by the laws of India. Courts in Kochi, Kerala have jurisdiction.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about these terms? Call or WhatsApp us at <a href={site.phoneHref}>{site.phoneDisplay}</a>.</p>
+</Legal>

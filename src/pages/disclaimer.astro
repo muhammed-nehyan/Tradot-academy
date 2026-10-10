@@ -1,0 +1,49 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../data/site';
+import { NEWS_ATTRIBUTION } from '../data/news';
+// TODO(client): confirm with your compliance advisor (SEBI status, wording).
+---
+
+<Legal
+  title="Disclaimer"
+  description="Tradot Academy provides stock market education only. We do not offer investment advice, tips or guaranteed returns."
+  updated="10 October 2026"
+>
+  <p class="callout">{site.disclaimer}</p>
+
+  <h2>Education, not advice</h2>
+  <p>
+    All content on this website and in our classes, including examples, chart studies, strategies and discussions, is
+    for educational purposes only. Nothing we publish or teach is a recommendation, solicitation or offer to buy or
+    sell any security or financial product.
+  </p>
+  <p>
+    We do not provide investment advice, research recommendations, stock tips, portfolio management or trading
+    signals, and we do not manage money on behalf of students.
+  </p>
+
+  <h2>Risk</h2>
+  <p>
+    Trading and investing in securities, including equities, futures and options, involves risk, including the
+    possible loss of your capital. Past performance of any strategy, example or market is not a guide to future
+    results. We make no promise or guarantee of profit or returns.
+  </p>
+  <p>
+    Before trading, consider your financial situation and risk tolerance, and consult a SEBI-registered investment
+    adviser if you need personalised advice.
+  </p>
+
+  <h2>Market news</h2>
+  <p>{NEWS_ATTRIBUTION}</p>
+  <p>
+    Headlines are shown as published by their sources and may be delayed. We do not edit them and are not responsible
+    for their accuracy.
+  </p>
+
+  <h2>Your responsibility</h2>
+  <p>
+    You are solely responsible for any trading or investment decisions you make. Tradot Academy, its mentors and staff
+    are not liable for any losses arising from the use of information on this website or in our classes.
+  </p>
+</Legal>

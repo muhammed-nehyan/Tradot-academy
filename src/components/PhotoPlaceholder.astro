@@ -7,7 +7,7 @@ interface Props {
 const { label, class: className } = Astro.props;
 ---
 
-<div class:list={['photo', className]} role="img" aria-label={`${label} (coming soon)`}>
+<div class:list={['photo', className]} role="img" aria-label={`${label} (coming soon)`} data-img-reveal>
   <span class="label">{label}</span>
 </div>
 

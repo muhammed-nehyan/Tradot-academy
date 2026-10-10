@@ -14,14 +14,34 @@ import { site, whatsappLink } from '../data/site';
 interface Props {
   title?: string;
   description?: string;
+  /** Keep out of search results (e.g. 404). */
+  noindex?: boolean;
 }
 
 const {
   title,
   description = 'Learn stock market trading from basics to advance level at Tradot Academy, Kalamassery, Kochi. 25-day program with live sessions from day 1, online and offline.',
+  noindex = false,
 } = Astro.props;
 
 const pageTitle = title ? `${title} | ${site.name}` : `${site.name} | Stock Market Trading Classes in Kochi`;
+const canonical = new URL(Astro.url.pathname.replace(/\/?$/, '/'), Astro.site);
+const ogImage = new URL('/og-image.jpg', Astro.site);
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  name: site.name,
+  url: Astro.site?.href,
+  logo: new URL('/logo.png', Astro.site).href,
+  telephone: site.phoneDisplay.replace(/\s/g, ''),
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Kalamassery, Kochi',
+    addressRegion: 'Kerala',
+    addressCountry: 'IN',
+  },
+};
 ---
 
 <!doctype html>
@@ -33,12 +53,34 @@ const pageTitle = title ? `${title} | ${site.name}` : `${site.name} | Stock Mark
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0B1117" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
     <ClientRouter />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    <div class="cursor" data-cursor aria-hidden="true"></div>
     <Nav />
     <main id="main">
       <slot />

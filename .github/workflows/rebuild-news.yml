@@ -1,0 +1,33 @@
+# Rebuilds the site on Cloudflare Pages so Market News headlines stay fresh.
+#
+# Cloudflare Pages free tier allows ~500 builds/month, so this runs every
+# 30 minutes during NSE market hours (Mon–Fri, 9:00–16:00 IST) plus once each
+# evening: about 360 builds/month, leaving room for normal deploys.
+# Times below are UTC (IST = UTC + 5:30). GitHub may delay scheduled runs.
+#
+# Setup: Cloudflare Pages → project → Settings → Builds → Deploy hooks → add
+# hook, then GitHub → repo → Settings → Secrets → Actions → CF_DEPLOY_HOOK.
+
+name: Rebuild for market news
+
+on:
+  schedule:
+    - cron: '30 3 * * 1-5' # 9:00 IST
+    - cron: '0,30 4-10 * * 1-5' # 9:30–16:00 IST
+    - cron: '30 14 * * *' # 20:00 IST daily
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages deploy hook
+        env:
+          HOOK: ${{ secrets.CF_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "CF_DEPLOY_HOOK secret is not set; skipping."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null
+          echo "Rebuild triggered."

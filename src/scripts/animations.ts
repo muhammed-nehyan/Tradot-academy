@@ -3,6 +3,9 @@
 //   [data-reveal]    element fades up when it enters (siblings stagger)
 //   [data-rotate]    cycles its [data-rotate-word] children
 //   [data-wordmark]  hero wordmark scales into the nav logo on scroll
+//   [data-statement] cyan circle grows with scroll (pinned)
+//   [data-img-reveal] clip-path uncover + scale 1.1 → 1
+//   [data-cursor]    custom dot cursor (fine pointers only)
 // Initial hidden states are set here, so content shows without JS.
 
 import { gsap, ScrollTrigger, SplitText, onPageMotion } from './motion';
@@ -106,4 +109,70 @@ onPageMotion(({ reduced }) => {
       },
     },
   });
+});
+
+// Scroll-scaled circle (Bermito-style). Pinned scrub on mouse devices only;
+// touch and reduced motion get the static cyan section.
+onPageMotion(({ reduced, finePointer }) => {
+  const section = document.querySelector<HTMLElement>('[data-statement]');
+  if (!section || reduced || !finePointer || window.innerWidth <= 1000) return;
+  const circle = section.querySelector('[data-statement-circle]');
+  const text = section.querySelector('[data-statement-text]');
+
+  gsap
+    .timeline({
+      scrollTrigger: { trigger: section, start: 'top top', end: '+=120%', scrub: true, pin: true },
+    })
+    .fromTo(circle, { scale: 0.04 }, { scale: 1, ease: 'power2.in', duration: 1 })
+    // Text comes in once the circle covers the screen, so it never spills past the edge.
+    .fromTo(text, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.8);
+});
+
+// Image reveals: uncover with clip-path while the content settles from 1.1 to 1.
+onPageMotion(({ reduced }) => {
+  if (reduced) return;
+  gsap.utils.toArray<HTMLElement>('[data-img-reveal]').forEach((el) => {
+    const inner = el.firstElementChild;
+    const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
+    tl.fromTo(el, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power4.inOut' });
+    if (inner) tl.fromTo(inner, { scale: 1.1 }, { scale: 1, duration: 1.6, ease: 'power3.out' }, 0);
+  });
+});
+
+// Custom cursor: small dot with easing that grows over links and buttons.
+// Mouse/trackpad only, never with reduced motion. The native cursor stays.
+onPageMotion(({ reduced, finePointer }) => {
+  const dot = document.querySelector<HTMLElement>('[data-cursor]');
+  if (!dot || reduced || !finePointer) return;
+
+  document.documentElement.classList.add('has-cursor');
+  // 44px dot drawn at 10px; hovering scales it up (transform + opacity only).
+  const rest = { scale: 10 / 44, opacity: 1 };
+  const grown = { scale: 1, opacity: 0.35 };
+  gsap.set(dot, { xPercent: -50, yPercent: -50, autoAlpha: 0, ...rest });
+  let hovering = false;
+  const x = gsap.quickTo(dot, 'x', { duration: 0.35, ease: 'power3.out' });
+  const y = gsap.quickTo(dot, 'y', { duration: 0.35, ease: 'power3.out' });
+  const interactive = 'a, button, summary, label, input, textarea, [role="button"], [tabindex="0"]';
+
+  const move = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') return;
+    dot.style.visibility = 'visible';
+    x(e.clientX);
+    y(e.clientY);
+    const hover = !!(e.target as Element | null)?.closest?.(interactive);
+    if (hover !== hovering || dot.style.opacity === '0') {
+      hovering = hover;
+      gsap.to(dot, { ...(hover ? grown : rest), duration: 0.35, ease: 'power3.out', overwrite: 'auto' });
+    }
+  };
+  const leave = () => gsap.to(dot, { opacity: 0, duration: 0.2, overwrite: 'auto' });
+
+  window.addEventListener('pointermove', move, { passive: true });
+  document.documentElement.addEventListener('pointerleave', leave);
+  return () => {
+    window.removeEventListener('pointermove', move);
+    document.documentElement.removeEventListener('pointerleave', leave);
+    document.documentElement.classList.remove('has-cursor');
+  };
 });
