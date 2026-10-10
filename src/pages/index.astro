@@ -1,11 +1,29 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import { whatsappLink } from '../data/site';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!-- Placeholder home: proves the shell (nav, footer, Lenis, transitions). Built out in step 2. -->
+<Base>
+  <section class="screen screen--hero bg-dark">
+    <div class="container">
+      <p class="eyebrow">Stock market trading academy · Kochi</p>
+      <h1 class="h1" style="margin-top:16px;max-width:14ch">Trade with <em>clarity</em>, not guesswork.</h1>
+      <p class="lead" style="margin-top:24px;max-width:52ch">
+        One program, basic to advance level. 25 days, live sessions from day 1, online and offline batches.
+      </p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:32px">
+        <Button href="/contact">Enroll Now</Button>
+        <Button href={whatsappLink()} variant="outline-light" external>Ask on WhatsApp</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen bg-white">
+    <div class="container">
+      <p class="eyebrow">Coming next</p>
+      <h2 class="h2" style="margin-top:16px">Home sections land in <em>step 2</em>.</h2>
+    </div>
+  </section>
+</Base>
