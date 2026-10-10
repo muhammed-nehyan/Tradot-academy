@@ -1,0 +1,104 @@
+---
+// No backend: on submit, open WhatsApp with the details prefilled.
+import { site } from '../data/site';
+---
+
+<form class="form" data-wa-form data-wa-number={site.whatsappNumber} novalidate>
+  <label>
+    Name
+    <input name="name" type="text" autocomplete="name" required />
+  </label>
+  <label>
+    Phone
+    <input name="phone" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9+\s\-]{10,15}" required />
+  </label>
+  <fieldset>
+    <legend>Preferred batch</legend>
+    <div class="form__choices">
+      <label class="form__choice"><input type="radio" name="batch" value="Online" checked /> Online</label>
+      <label class="form__choice"><input type="radio" name="batch" value="Offline at Kalamassery" /> Offline at Kalamassery</label>
+    </div>
+  </fieldset>
+  <label>
+    <span>Message <span class="form__opt">(optional)</span></span>
+    <textarea name="message" rows="4"></textarea>
+  </label>
+  <p class="form__error" role="alert" hidden data-wa-error>Please add your name and a valid phone number.</p>
+  <button class="form__submit" type="submit">
+    Send on WhatsApp
+  </button>
+  <p class="form__note">This opens WhatsApp with your details filled in. Nothing is stored on this website.</p>
+</form>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const form = document.querySelector<HTMLFormElement>('[data-wa-form]');
+    if (!form) return;
+    const error = form.querySelector<HTMLElement>('[data-wa-error]')!;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        error.hidden = false;
+        form.querySelector<HTMLElement>(':invalid')?.focus();
+        return;
+      }
+      error.hidden = true;
+      const d = new FormData(form);
+      const lines = [
+        'Hi Tradot Academy, I would like to join the trading program.',
+        `Name: ${d.get('name')}`,
+        `Phone: ${d.get('phone')}`,
+        `Batch: ${d.get('batch')}`,
+      ];
+      const msg = String(d.get('message') ?? '').trim();
+      if (msg) lines.push(`Message: ${msg}`);
+      const url = `https://wa.me/${form.dataset.waNumber}?text=${encodeURIComponent(lines.join('\n'))}`;
+      // Fall back to same-tab navigation if the popup is blocked.
+      if (!window.open(url, '_blank')) window.location.href = url;
+    });
+  });
+</script>
+
+<style>
+  .form { display: flex; flex-direction: column; gap: 20px; }
+  label, legend { display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600; }
+  fieldset { border: 0; }
+  legend { margin-bottom: 8px; }
+  input[type='text'], input[type='tel'], textarea {
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: #fff;
+    font-size: 15px;
+    font-weight: 400;
+    transition: border-color 0.2s;
+  }
+  input:focus, textarea:focus { border-color: var(--cyan); outline: none; box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.2); }
+  textarea { resize: vertical; min-height: 120px; }
+  .form__opt { font-weight: 400; color: var(--muted); }
+  .form__choices { display: flex; gap: 12px; flex-wrap: wrap; }
+  .form__choice {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .form__choice:has(input:checked) { border-color: var(--text); background: var(--text); color: #fff; }
+  .form__choice input { accent-color: var(--cyan); }
+  .form__error { color: #C62828; font-size: 14px; font-weight: 600; }
+  .form__submit {
+    align-self: flex-start;
+    padding: 16px 28px;
+    border-radius: var(--radius);
+    background: var(--whatsapp);
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .form__note { font-size: 13px; color: var(--muted); }
+</style>

@@ -43,7 +43,20 @@ const pageTitle = title ? `${title} | ${site.name}` : `${site.name} | Stock Mark
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    {
+      Astro.slots.has('cta') ? (
+        <div class="last-screen">
+          <div class="last-screen__cta">
+            <div class="container">
+              <slot name="cta" />
+            </div>
+          </div>
+          <Footer />
+        </div>
+      ) : (
+        <Footer />
+      )
+    }
 
     <a
       class="wa-float"
@@ -61,11 +74,20 @@ const pageTitle = title ? `${title} | ${site.name}` : `${site.name} | Stock Mark
 
     <script>
       import '../scripts/motion';
+      import '../scripts/animations';
     </script>
   </body>
 </html>
 
 <style>
+  /* Last screen = CTA band + footer together. */
+  .last-screen { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; }
+  .last-screen__cta { flex: 1; display: flex; align-items: center; padding: 48px 0; background: var(--subtle); }
+  .last-screen__cta > .container { width: min(var(--container), 100% - 2 * var(--gutter)); }
+  @media (max-width: 1000px) {
+    .last-screen { min-height: 0; }
+  }
+
   .wa-float {
     position: fixed;
     right: 32px;

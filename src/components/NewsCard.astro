@@ -1,0 +1,42 @@
+---
+import type { NewsItem } from '../data/news';
+import { formatNewsTime } from '../data/news';
+interface Props {
+  item: NewsItem;
+}
+const { item } = Astro.props;
+---
+
+<a class="news-card" href={item.link} target="_blank" rel="noopener nofollow" data-source={item.source} data-reveal>
+  <span class="label news-card__src"><i aria-hidden="true"></i>{item.source}</span>
+  <h3 class="news-card__title">{item.title}</h3>
+  {item.date && <time class="news-card__time" datetime={item.date.toISOString()}>{formatNewsTime(item.date)} IST</time>}
+</a>
+
+<style>
+  .news-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    padding: 24px;
+    border-radius: 16px;
+    background: var(--ink-raised);
+    border: 1px solid var(--border-dark);
+    color: var(--on-dark);
+    transition: border-color 0.3s;
+  }
+  .news-card:hover { border-color: var(--cyan); }
+  .news-card__src { display: inline-flex; align-items: center; gap: 8px; color: var(--cyan); }
+  .news-card__src i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .news-card__title {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .news-card__time { margin-top: auto; font-size: 13px; color: var(--on-dark-muted); }
+</style>

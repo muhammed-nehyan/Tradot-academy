@@ -1,0 +1,131 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import SectionHead from '../components/SectionHead.astro';
+import FeatureItem from '../components/FeatureItem.astro';
+import MentorCard from '../components/MentorCard.astro';
+import PhotoPlaceholder from '../components/PhotoPlaceholder.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { mentors } from '../data/mentors';
+import { whatsappLink } from '../data/site';
+---
+
+<Base
+  title="About Us"
+  description="Tradot Academy is a stock market trading academy in Kalamassery, Kochi, teaching a disciplined, risk-first process with live classes online and offline."
+>
+  <!-- Hero -->
+  <section class="screen screen--hero bg-dark">
+    <div class="container about-hero">
+      <div class="about-hero__text">
+        <p class="eyebrow">About Tradot</p>
+        <h1 class="h1" data-split>We teach the market the way it <em>actually works.</em></h1>
+        <p class="lead" data-reveal>
+          Most people lose money in the market not because it's impossible, but because nobody taught them a process.
+          At Tradot Academy in Kalamassery, Kochi, we teach that process, step by step.
+        </p>
+        <div class="about-hero__ctas" data-reveal>
+          <Button href="/course">Explore the Course</Button>
+          <Button href="/contact" variant="outline-light">Visit the Academy</Button>
+        </div>
+      </div>
+      <PhotoPlaceholder label="Classroom photo" class="about-hero__photo" />
+    </div>
+  </section>
+
+  <!-- Story + values -->
+  <section class="screen bg-white">
+    <div class="container">
+      <div class="grid-2 story">
+        <div class="story__head">
+          <p class="eyebrow">Our story</p>
+          <h2 class="h2" data-split>Discipline over <em>hype.</em></h2>
+        </div>
+        <div class="story__text">
+          <!-- TODO(client): replace with the academy's real story. -->
+          <p class="lead">
+            Tradot Academy was started to give people in Kochi a proper, structured way to learn trading, instead of
+            chasing tips and social media hype.
+          </p>
+          <p class="body">
+            Our program takes you from how the market works to technical analysis, risk management and trading
+            psychology, with live sessions from day 1 and mentors who trade.
+          </p>
+        </div>
+      </div>
+      <div class="grid-3 values">
+        <FeatureItem icon="target" title="No tips, no shortcuts">
+          We don't give tips or promise quick profits. We teach you to think for yourself.
+        </FeatureItem>
+        <FeatureItem icon="shield" title="Risk comes first">
+          Every strategy starts with how much you can lose, not how much you might make.
+        </FeatureItem>
+        <FeatureItem icon="trending" title="Learn by doing">
+          Concepts are practised on real charts with mentor feedback, so you build real skill.
+        </FeatureItem>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mentors -->
+  <section class="screen bg-subtle">
+    <div class="container">
+      <SectionHead eyebrow="Our mentors">
+        Learn from people who <em>trade.</em>
+        <p slot="aside" class="lead">Ask questions, share your trades and get direct feedback from your mentors.</p>
+      </SectionHead>
+      <div class="grid-3">
+        {mentors.map((m) => <MentorCard name={m.name} role={m.role}>{m.bio}</MentorCard>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- How classes work -->
+  <section class="screen bg-dark">
+    <div class="container">
+      <SectionHead eyebrow="How classes work">
+        Built around how <em>people learn.</em>
+        <Button slot="aside" href={whatsappLink()} variant="outline-light" external>Ask about batches</Button>
+      </SectionHead>
+      <div class="grid-4">
+        <FeatureItem icon="monitor" title="Online or offline">
+          Attend at our Kalamassery centre or join the live online batch from anywhere.
+        </FeatureItem>
+        <FeatureItem icon="radio" title="Live from day 1">
+          Every class is live, so you can ask questions as you learn.
+        </FeatureItem>
+        <!-- TODO(client): confirm recordings and post-course doubt support. -->
+        <FeatureItem icon="video" title="Class recordings">
+          Missed a session? Catch up with the class recording.
+        </FeatureItem>
+        <FeatureItem icon="message" title="Doubt support">
+          Ask your mentors whenever you get stuck, in class or in your batch group.
+        </FeatureItem>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand slot="cta">Start your trading <em>journey.</em></CtaBand>
+</Base>
+
+<style>
+  .about-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 64px;
+    align-items: center;
+  }
+  .about-hero__text { display: flex; flex-direction: column; gap: 24px; }
+  .about-hero__ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .about-hero :global(.about-hero__photo) { height: min(520px, 62vh); }
+
+  .story { align-items: start; }
+  .story__head, .story__text { display: flex; flex-direction: column; gap: 18px; }
+  .values { margin-top: 80px; }
+
+  @media (max-width: 1000px) {
+    .about-hero { grid-template-columns: 1fr; gap: 40px; }
+    .about-hero :global(.about-hero__photo) { height: 280px; }
+    .values { margin-top: 48px; }
+  }
+</style>

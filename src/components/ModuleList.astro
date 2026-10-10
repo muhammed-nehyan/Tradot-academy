@@ -1,0 +1,72 @@
+---
+// The 5 modules as large text lines. Desktop: hovered line turns ink, the
+// rest stay grey, and its summary appears beside it. Mobile: plain list.
+import { modules } from '../data/program';
+---
+
+<ol class="modules" role="list">
+  {
+    modules.map((m, i) => (
+      <li class="modules__row" tabindex="0" data-reveal>
+        <span class="label modules__n">{String(i + 1).padStart(2, '0')}</span>
+        <span class="modules__title">{m.title}</span>
+        <span class="modules__preview">
+          <span class="label modules__days">{m.days}</span>
+          {m.summary}
+        </span>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .modules { border-bottom: 1px solid var(--border); }
+  .modules__row {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) 300px;
+    align-items: center;
+    gap: 24px;
+    padding: 18px 0;
+    border-top: 1px solid var(--border);
+    outline: none;
+  }
+  .modules__n { color: var(--muted); }
+  .modules__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 48px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    transition: color 0.4s var(--ease-out), transform 0.5s var(--ease-out);
+  }
+  .modules__preview {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .modules__days { color: var(--cyan); }
+
+  @media (hover: hover) and (min-width: 1001px) {
+    .modules:hover .modules__title,
+    .modules:focus-within .modules__title { color: #C5CED4; }
+    .modules__row:hover .modules__title,
+    .modules__row:focus-visible .modules__title { color: var(--text); transform: translateX(12px); }
+    .modules__row:focus-visible .modules__title { text-decoration: underline 2px var(--cyan); text-underline-offset: 8px; }
+    .modules__preview { opacity: 0; transform: translateX(-12px); transition: opacity 0.4s, transform 0.5s var(--ease-out); }
+    .modules__row:hover .modules__preview,
+    .modules__row:focus-visible .modules__preview { opacity: 1; transform: none; }
+  }
+
+  @media (max-width: 1000px) {
+    .modules__row { grid-template-columns: 40px minmax(0, 1fr); row-gap: 8px; padding: 20px 0; }
+    .modules__title { font-size: 26px; }
+    .modules__preview { grid-column: 2; font-size: 15px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .modules__title, .modules__preview { transition: none !important; transform: none !important; }
+  }
+</style>

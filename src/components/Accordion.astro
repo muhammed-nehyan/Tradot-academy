@@ -1,0 +1,78 @@
+---
+// Native <details> accordion. Pass items with a title and HTML-free body lines.
+interface Item {
+  title: string;
+  meta?: string;
+  body: string | string[];
+}
+interface Props {
+  items: Item[];
+  openFirst?: boolean;
+}
+const { items, openFirst = false } = Astro.props;
+---
+
+<div class="accordion">
+  {
+    items.map((item, i) => (
+      <details open={openFirst && i === 0}>
+        <summary>
+          <span class="accordion__title">
+            {item.meta && <span class="label accordion__meta">{item.meta}</span>}
+            {item.title}
+          </span>
+          <span class="accordion__pm" aria-hidden="true" />
+        </summary>
+        {Array.isArray(item.body) ? (
+          <ul>{item.body.map((b) => <li>{b}</li>)}</ul>
+        ) : (
+          <p>{item.body}</p>
+        )}
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .accordion { border-top: 1px solid var(--border); }
+  details { border-bottom: 1px solid var(--border); padding: 24px 0; }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .accordion__title { display: flex; flex-direction: column; gap: 6px; }
+  .accordion__meta { color: var(--cyan); font-weight: 500; }
+  .accordion__pm {
+    position: relative;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  .accordion__pm::before,
+  .accordion__pm::after {
+    content: '';
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 12px; height: 1.5px;
+    background: currentColor;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s var(--ease-out);
+  }
+  .accordion__pm::after { transform: translate(-50%, -50%) rotate(90deg); }
+  details[open] .accordion__pm { background: var(--text); border-color: var(--text); color: #fff; }
+  details[open] .accordion__pm::after { transform: translate(-50%, -50%) rotate(0deg); }
+  details p, details ul { margin-top: 14px; max-width: 720px; font-size: 16px; line-height: 1.7; color: var(--muted); }
+  details ul { padding-left: 20px; }
+  details li { margin-bottom: 4px; }
+</style>

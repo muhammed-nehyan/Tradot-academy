@@ -1,0 +1,172 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ModuleList from '../components/ModuleList.astro';
+import FeatureItem from '../components/FeatureItem.astro';
+import Accordion from '../components/Accordion.astro';
+import MentorCard from '../components/MentorCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { program, modules, highlights, audience, faqs } from '../data/program';
+import { mentors } from '../data/mentors';
+import { whatsappLink } from '../data/site';
+import type { IconName } from '../data/icons';
+
+const audienceIcons: IconName[] = ['compass', 'trending', 'clock', 'book'];
+const lead = mentors[0];
+---
+
+<Base
+  title="Stock Market Trading Course"
+  description={`Tradot Academy's ${program.durationDisplay} stock market trading program, basic to advance level. ${program.feeDisplay}, live sessions from day 1, online and offline batches in Kalamassery, Kochi.`}
+>
+  <!-- Hero with fee card -->
+  <section class="screen screen--hero bg-dark">
+    <div class="container course-hero">
+      <div class="course-hero__text">
+        <p class="eyebrow">The program · {program.level}</p>
+        <h1 class="h1" data-split>Basic to advance, in <em>25 days.</em></h1>
+        <p class="lead" data-reveal>
+          One complete program that takes you from how the market works to reading charts, managing risk and
+          building the mindset of a consistent trader.
+        </p>
+        <ul class="ticks" role="list" data-reveal>
+          {highlights.map((h) => <li><Icon name="check" size={18} />{h}</li>)}
+        </ul>
+      </div>
+
+      <aside class="fee-card" aria-label="Course fee" data-reveal>
+        <p class="label fee-card__label">Course fee</p>
+        <p class="fee-card__fee">{program.feeDisplay}</p>
+        <dl class="fee-card__meta">
+          <div><dt class="label">Duration</dt><dd>{program.durationDisplay}</dd></div>
+          <div><dt class="label">Mode</dt><dd>Online &amp; offline</dd></div>
+          <div><dt class="label">Level</dt><dd>Basic to advance</dd></div>
+          <div><dt class="label">Next batch</dt><dd>{program.nextBatch ?? 'Ask us for dates'}</dd></div>
+        </dl>
+        <div class="fee-card__ctas">
+          <Button href="/contact">Enroll Now</Button>
+          <Button
+            href={whatsappLink('Hi Tradot Academy, I have a question about the trading program.')}
+            variant="outline-light"
+            external>Ask on WhatsApp</Button
+          >
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- What you'll learn -->
+  <section class="screen bg-white">
+    <div class="container">
+      <SectionHead eyebrow="What you'll learn">
+        Five modules, <em>one process.</em>
+        <p slot="aside" class="lead">Each module builds on the last, from first principles to a plan you can follow.</p>
+      </SectionHead>
+      <ModuleList />
+    </div>
+  </section>
+
+  <!-- Who it's for -->
+  <section class="screen bg-subtle">
+    <div class="container">
+      <SectionHead eyebrow="Who it's for">
+        Built for anyone who wants to <em>trade properly.</em>
+      </SectionHead>
+      <div class="grid-4">
+        {audience.map((a, i) => <FeatureItem icon={audienceIcons[i]} title={a.title}>{a.text}</FeatureItem>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Syllabus -->
+  <section class="screen bg-white">
+    <div class="container grid-2 split">
+      <div class="split__head">
+        <p class="eyebrow">Syllabus</p>
+        <h2 class="h2" data-split>25 days, <em>step by step.</em></h2>
+        <p class="lead">Live sessions from day 1, with practice on real charts and mentor feedback throughout.</p>
+      </div>
+      <Accordion items={modules.map((m) => ({ title: m.title, meta: m.days, body: m.topics }))} openFirst />
+    </div>
+  </section>
+
+  <!-- Mentor -->
+  <section class="screen bg-dark">
+    <div class="container grid-2 split mentor-split">
+      <MentorCard name={lead.name} role={lead.role}>{lead.bio}</MentorCard>
+      <div class="split__head">
+        <p class="eyebrow">Your mentor</p>
+        <h2 class="h2" data-split>Learn from someone who <em>trades.</em></h2>
+        <p class="lead">
+          Expert mentorship is part of every batch. Ask questions in class, share your trades and get direct feedback.
+        </p>
+        <a class="text-link" href="/about">Meet the team <Icon name="arrow" size={18} /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="screen bg-subtle">
+    <div class="container grid-2 split">
+      <div class="split__head">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="h2" data-split>Questions, <em>answered.</em></h2>
+        <p class="lead">Anything else? Message us on WhatsApp and we'll reply.</p>
+        <div><Button href={whatsappLink()} variant="dark" external>Ask on WhatsApp</Button></div>
+      </div>
+      <Accordion items={faqs.map((f) => ({ title: f.q, body: f.a }))} />
+    </div>
+  </section>
+
+  <CtaBand slot="cta">Your next batch <em>starts soon.</em></CtaBand>
+</Base>
+
+<style>
+  .course-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 64px;
+    align-items: center;
+  }
+  .course-hero__text { display: flex; flex-direction: column; gap: 24px; }
+  .ticks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; margin-top: 8px; }
+  .ticks li { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+  .ticks :global(svg) { color: var(--cyan); flex-shrink: 0; }
+
+  .fee-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 36px;
+    border-radius: 24px;
+    background: var(--ink-raised);
+    border: 1px solid var(--border-dark);
+  }
+  .fee-card__label { color: var(--on-dark-muted); }
+  .fee-card__fee {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .fee-card__meta { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-block: 20px; border-block: 1px solid var(--border-dark); }
+  .fee-card__meta dt { color: var(--on-dark-muted); margin-bottom: 4px; }
+  .fee-card__meta dd { font-weight: 700; }
+  .fee-card__ctas { display: flex; flex-direction: column; gap: 12px; }
+  .fee-card__ctas :global(.btn) { width: 100%; }
+
+  .split { align-items: start; }
+  .split__head { display: flex; flex-direction: column; gap: 20px; }
+  .mentor-split { align-items: center; grid-template-columns: 400px minmax(0, 1fr); }
+
+  @media (max-width: 1000px) {
+    .course-hero { grid-template-columns: 1fr; gap: 40px; }
+    .ticks { grid-template-columns: 1fr; }
+    .fee-card { padding: 28px; }
+    .fee-card__fee { font-size: 48px; }
+    .mentor-split { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,29 +1,204 @@
 ---
 import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import Marquee from '../components/Marquee.astro';
+import SectionHead from '../components/SectionHead.astro';
+import FeatureItem from '../components/FeatureItem.astro';
+import ModuleList from '../components/ModuleList.astro';
+import StepItem from '../components/StepItem.astro';
+import NewsCard from '../components/NewsCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { program } from '../data/program';
 import { whatsappLink } from '../data/site';
+import { getNews, NEWS_ATTRIBUTION } from '../data/news';
+
+const news = (await getNews()).slice(0, 4);
+const rotating = ['clarity', 'discipline', 'a plan', 'confidence'];
 ---
 
-<!-- Placeholder home: proves the shell (nav, footer, Lenis, transitions). Built out in step 2. -->
 <Base>
-  <section class="screen screen--hero bg-dark">
-    <div class="container">
-      <p class="eyebrow">Stock market trading academy · Kochi</p>
-      <h1 class="h1" style="margin-top:16px;max-width:14ch">Trade with <em>clarity</em>, not guesswork.</h1>
-      <p class="lead" style="margin-top:24px;max-width:52ch">
-        One program, basic to advance level. 25 days, live sessions from day 1, online and offline batches.
-      </p>
-      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:32px">
-        <Button href="/contact">Enroll Now</Button>
-        <Button href={whatsappLink()} variant="outline-light" external>Ask on WhatsApp</Button>
+  <!-- Hero: wordmark + statement, shares the first screen with the nav -->
+  <section class="hero bg-dark">
+    <p class="hero__wordmark" data-wordmark aria-hidden="true"><span>TRA</span>DOT</p>
+
+    <div class="container hero__bottom">
+      <h1 class="h1 hero__title">
+        Trade with
+        <span class="rotate" data-rotate>
+          {rotating.map((w, i) => (
+            <em data-rotate-word aria-hidden={i > 0 ? 'true' : undefined}>{w},</em>
+          ))}
+        </span>
+        <br />not guesswork.
+      </h1>
+      <div class="hero__side" data-reveal>
+        <p class="lead">
+          A {program.durationDays}-day stock market program, basic to advance level. Live sessions from day 1, online
+          and offline in Kalamassery, Kochi.
+        </p>
+        <div class="hero__ctas">
+          <Button href="/contact">Enroll Now</Button>
+          <Button href={whatsappLink()} variant="outline-light" external>Ask on WhatsApp</Button>
+        </div>
       </div>
     </div>
   </section>
 
+  <Marquee items={['Online & Offline', 'Live from Day 1', '25 Days', 'Basic to Advance', 'Kalamassery, Kochi']} />
+
+  <!-- Why Tradot -->
   <section class="screen bg-white">
     <div class="container">
-      <p class="eyebrow">Coming next</p>
-      <h2 class="h2" style="margin-top:16px">Home sections land in <em>step 2</em>.</h2>
+      <SectionHead eyebrow="Why Tradot">
+        Learn a process, <em>not tips.</em>
+        <p slot="aside" class="lead">
+          Most people lose money because nobody taught them a process. We teach one, step by step.
+        </p>
+      </SectionHead>
+      <div class="grid-4">
+        <FeatureItem icon="radio" title="Live from day 1">
+          Every session is live from the first day, so you can ask questions as you learn.
+        </FeatureItem>
+        <FeatureItem icon="users" title="Expert mentorship">
+          Learn from mentors who trade the markets and get direct feedback on your work.
+        </FeatureItem>
+        <FeatureItem icon="shield" title="Risk comes first">
+          Every strategy starts with how much you can lose, not how much you might make.
+        </FeatureItem>
+        <FeatureItem icon="monitor" title="Online or offline">
+          Join the offline batch in Kalamassery or attend live online from anywhere.
+        </FeatureItem>
+      </div>
     </div>
   </section>
+
+  <!-- Program preview -->
+  <section class="screen bg-subtle">
+    <div class="container">
+      <SectionHead eyebrow="The program">
+        One program. Basic to <em>advance.</em>
+        <div slot="aside" class="facts">
+          <dl>
+            <div><dt class="label">Fee</dt><dd>{program.feeDisplay}</dd></div>
+            <div><dt class="label">Duration</dt><dd>{program.durationDisplay}</dd></div>
+            <div><dt class="label">Mode</dt><dd>Online &amp; offline</dd></div>
+          </dl>
+          <a class="text-link" href="/course">View the course <Icon name="arrow" size={18} /></a>
+        </div>
+      </SectionHead>
+      <ModuleList />
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="screen bg-dark">
+    <div class="container">
+      <SectionHead eyebrow="How it works">
+        From first message to your <em>own plan.</em>
+        <Button slot="aside" href={whatsappLink()} variant="outline-light" external>Message us</Button>
+      </SectionHead>
+      <div class="grid-4">
+        <StepItem n={1} title="Message us">
+          Reach us on WhatsApp or the contact form. We'll share batch dates and answer your questions.
+        </StepItem>
+        <StepItem n={2} title="Pick your batch">
+          Choose online, or offline at our Kalamassery centre, whichever fits your schedule.
+        </StepItem>
+        <StepItem n={3} title="Learn live for 25 days">
+          Five modules from trading basics to psychology, taught live from day 1.
+        </StepItem>
+        <StepItem n={4} title="Trade with a plan">
+          Finish with your own trading plan and clear rules for managing risk.
+        </StepItem>
+      </div>
+    </div>
+  </section>
+
+  <!-- Market news preview -->
+  <section class="screen bg-white">
+    <div class="container">
+      <SectionHead eyebrow="Market news">
+        Today in the <em>markets.</em>
+        <Button slot="aside" href="/market-news" variant="dark">All headlines</Button>
+      </SectionHead>
+      {
+        news.length ? (
+          <div class="grid-4 news-grid">
+            {news.map((item) => (
+              <NewsCard item={item} />
+            ))}
+          </div>
+        ) : (
+          <p class="news-empty">News unavailable right now. Please check back soon.</p>
+        )
+      }
+      <p class="attribution">{NEWS_ATTRIBUTION}</p>
+    </div>
+  </section>
+
+  <CtaBand slot="cta">Start trading with a <em>plan.</em></CtaBand>
 </Base>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 48px;
+    padding: calc(var(--nav-h) + 24px) 0 72px;
+    overflow: hidden;
+  }
+  .hero__wordmark {
+    padding-inline: var(--gutter);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 800;
+    /* Edge to edge: TRADOT is ~4.15em wide in Archivo 800 italic. Capped on short screens. */
+    font-size: min(calc((100vw - 2 * var(--gutter)) / 4.15), 44svh);
+    line-height: 0.8;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+    text-align: center;
+    color: var(--on-dark);
+    will-change: transform;
+  }
+  .hero__wordmark span { color: var(--cyan); }
+  /* Above the fixed nav while it travels into the logo spot; hidden under the open mobile menu. */
+  .hero__wordmark { position: relative; z-index: 60; }
+  :global(body:has(.nav.is-open)) .hero__wordmark { visibility: hidden; }
+
+  .hero__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 48px;
+  }
+  .hero__title { max-width: 12ch; }
+  .hero__side { max-width: 440px; display: flex; flex-direction: column; gap: 28px; }
+  .hero__ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .facts { display: flex; flex-direction: column; gap: 24px; }
+  .facts dl { display: flex; gap: 40px; }
+  .facts dt { color: var(--muted); margin-bottom: 4px; }
+  .facts dd { white-space: nowrap; font-family: var(--font-display); font-weight: 800; font-size: 26px; line-height: 1.1; }
+
+  .news-grid { gap: 20px; }
+  .news-empty {
+    padding: 40px;
+    border-radius: 16px;
+    background: var(--subtle);
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .attribution { margin-top: 32px; max-width: 760px; font-size: 13px; color: var(--muted); }
+
+  @media (max-width: 1000px) {
+    .hero { min-height: 0; gap: 40px; padding-bottom: 56px; }
+    .hero__bottom { flex-direction: column; align-items: flex-start; gap: 28px; }
+    .facts dl { gap: 24px; flex-wrap: wrap; }
+    .facts dd { font-size: 22px; }
+  }
+</style>

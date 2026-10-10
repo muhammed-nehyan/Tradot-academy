@@ -1,0 +1,109 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { site, whatsappLink } from '../data/site';
+
+// TODO(client): exact street address, Google Maps link, email and hours.
+const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(site.location)}&z=14&output=embed`;
+---
+
+<Base
+  title="Contact"
+  description="Contact Tradot Academy in Kalamassery, Kochi. Call or WhatsApp +91 96458 86344 to join the next online or offline trading batch."
+>
+  <!-- Hero + details -->
+  <section class="screen screen--hero bg-dark">
+    <div class="container contact-hero">
+      <div class="contact-hero__text">
+        <p class="eyebrow">Contact</p>
+        <h1 class="h1" data-split>Talk to us about the <em>next batch.</em></h1>
+        <p class="lead" data-reveal>
+          Call or message us on WhatsApp for batch dates, fees and anything else about the program. Or visit the
+          academy in Kalamassery.
+        </p>
+      </div>
+      <ul class="details" role="list">
+        <li data-reveal>
+          <Icon name="phone" />
+          <div><p class="label">Call</p><a href={site.phoneHref}>{site.phoneDisplay}</a></div>
+        </li>
+        <li data-reveal>
+          <Icon name="message" />
+          <div>
+            <p class="label">WhatsApp</p>
+            <a href={whatsappLink()} target="_blank" rel="noopener">{site.phoneDisplay}</a>
+          </div>
+        </li>
+        <li data-reveal>
+          <Icon name="pin" />
+          <div><p class="label">Visit</p><span>{site.location}</span></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Form + map -->
+  <section class="screen bg-white">
+    <div class="container grid-2 contact-main">
+      <div class="contact-main__form">
+        <p class="eyebrow">Enquiry</p>
+        <h2 class="h2" data-split>Send us a <em>message.</em></h2>
+        <p class="lead">Fill this in and WhatsApp opens with your details ready to send.</p>
+        <ContactForm />
+      </div>
+      <div class="contact-main__map">
+        <iframe
+          title={`Map of ${site.location}`}
+          src={mapSrc}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
+        <p class="label map-note"><Icon name="pin" size={16} /> {site.location}</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 64px;
+    align-items: end;
+  }
+  .contact-hero__text { display: flex; flex-direction: column; gap: 24px; }
+  .details { display: flex; flex-direction: column; }
+  .details li {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 22px 0;
+    border-top: 1px solid var(--border-dark);
+  }
+  .details li:last-child { border-bottom: 1px solid var(--border-dark); }
+  .details :global(svg) { color: var(--cyan); margin-top: 2px; flex-shrink: 0; }
+  .details .label { color: var(--on-dark-muted); margin-bottom: 4px; }
+  .details a, .details span { font-size: 20px; font-weight: 700; }
+  .details a:hover { color: var(--cyan); }
+
+  .contact-main { align-items: stretch; }
+  .contact-main__form { display: flex; flex-direction: column; gap: 18px; }
+  .contact-main__form :global(.form) { margin-top: 12px; }
+  .contact-main__map { display: flex; flex-direction: column; gap: 14px; }
+  .contact-main__map iframe {
+    flex: 1;
+    width: 100%;
+    min-height: 420px;
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: var(--subtle);
+  }
+  .map-note { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .map-note :global(svg) { color: var(--cyan); }
+
+  @media (max-width: 1000px) {
+    .contact-hero { grid-template-columns: 1fr; gap: 40px; }
+    .contact-main__map iframe { min-height: 320px; }
+  }
+</style>

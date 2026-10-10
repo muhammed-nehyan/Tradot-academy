@@ -171,3 +171,33 @@ html.lenis, html.lenis body { height: auto; }
 .body { font-size: var(--fs-body); line-height: 1.6; color: var(--muted); }
 .bg-dark .lead,
 .bg-dark .body { color: var(--on-dark-muted); }
+
+/* ---------- Grids ---------- */
+.grid-2, .grid-3, .grid-4 { display: grid; gap: 40px 32px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px; }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1000px) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 32px; }
+}
+@media (max-width: 640px) {
+  .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ---------- Rotating word ---------- */
+.rotate { display: inline-grid; vertical-align: bottom; }
+.rotate > * { grid-area: 1 / 1; }
+.rotate:not(.is-rotating) > * + * { display: none; }
+.rotate.is-rotating { overflow: hidden; padding: 0 0.12em 0.08em 0; margin: 0 -0.12em -0.08em 0; }
+
+/* ---------- Text link ---------- */
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--cyan);
+}
+.text-link svg { transition: transform 0.3s var(--ease-out); }
+.text-link:hover svg { transform: translateX(4px); }

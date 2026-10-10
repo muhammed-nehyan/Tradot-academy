@@ -1,0 +1,23 @@
+---
+// Stand-in until the client sends real photos. Swap for an <img>.
+interface Props {
+  label: string;
+  class?: string;
+}
+const { label, class: className } = Astro.props;
+---
+
+<div class:list={['photo', className]} role="img" aria-label={`${label} (coming soon)`}>
+  <span class="label">{label}</span>
+</div>
+
+<style>
+  .photo {
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-lg);
+    background: var(--ink-raised);
+    border: 1px solid var(--border-dark);
+    color: var(--on-dark-muted);
+  }
+</style>

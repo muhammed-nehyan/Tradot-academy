@@ -8,7 +8,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
 
 <header class="nav" data-nav>
   <div class="container nav__inner">
-    <a href="/" class="nav__logo" aria-label="Tradot Academy home">
+    <a href="/" class="nav__logo" aria-label="Tradot Academy home" data-nav-logo>
       <img src="/logo-white.png" alt="Tradot Academy" width="800" height="455" />
     </a>
 
@@ -49,9 +49,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   }
   /* Set from JS once the page scrolls past the top. */
   .nav.is-scrolled {
-    background: rgba(11, 17, 23, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: var(--ink);
     box-shadow: 0 1px 0 var(--border-dark);
   }
 

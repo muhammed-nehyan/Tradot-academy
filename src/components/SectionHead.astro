@@ -1,0 +1,33 @@
+---
+// Eyebrow + split-reveal heading, with an optional aside (lead text or button).
+interface Props {
+  eyebrow: string;
+  as?: 'h1' | 'h2';
+  class?: string;
+}
+const { eyebrow, as: Tag = 'h2', class: className } = Astro.props;
+---
+
+<div class:list={['head', className]}>
+  <div class="head__main">
+    <p class="eyebrow">{eyebrow}</p>
+    <Tag class={Tag} data-split><slot /></Tag>
+  </div>
+  {Astro.slots.has('aside') && <div class="head__aside"><slot name="aside" /></div>}
+</div>
+
+<style>
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 64px;
+  }
+  .head__main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 16px; max-width: 760px; }
+  .head__aside { flex: 0 1 auto; max-width: 440px; }
+
+  @media (max-width: 1000px) {
+    .head { flex-direction: column; align-items: flex-start; gap: 24px; margin-bottom: 40px; }
+  }
+</style>
