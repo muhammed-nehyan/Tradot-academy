@@ -111,21 +111,27 @@ onPageMotion(({ reduced }) => {
   });
 });
 
-// Scroll-scaled circle (Bermito-style). Pinned scrub on mouse devices only;
-// touch and reduced motion get the static cyan section.
-onPageMotion(({ reduced, finePointer }) => {
+// Scroll-scaled circle (Bermito-style). Pinned scrub on desktop mouse devices only;
+// mobile, touch and reduced motion get the static cyan section. matchMedia sets it up
+// or tears it down (pin spacer included) whenever the viewport crosses the breakpoint,
+// so resizing to mobile never leaves an empty pinned gap.
+onPageMotion(() => {
   const section = document.querySelector<HTMLElement>('[data-statement]');
-  if (!section || reduced || !finePointer || window.innerWidth <= 1000) return;
+  if (!section) return;
   const circle = section.querySelector('[data-statement-circle]');
   const text = section.querySelector('[data-statement-text]');
 
-  gsap
-    .timeline({
-      scrollTrigger: { trigger: section, start: 'top top', end: '+=120%', scrub: true, pin: true },
-    })
-    .fromTo(circle, { scale: 0.04 }, { scale: 1, ease: 'power2.in', duration: 1 })
-    // Text comes in once the circle covers the screen, so it never spills past the edge.
-    .fromTo(text, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.8);
+  const mm = gsap.matchMedia();
+  mm.add('(min-width: 1001px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
+    gsap
+      .timeline({
+        scrollTrigger: { trigger: section, start: 'top top', end: '+=120%', scrub: true, pin: true },
+      })
+      .fromTo(circle, { scale: 0.04 }, { scale: 1, ease: 'power2.in', duration: 1 })
+      // Text comes in once the circle covers the screen, so it never spills past the edge.
+      .fromTo(text, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, ease: 'power2.out', duration: 0.35 }, 0.8);
+  });
+  return () => mm.revert();
 });
 
 // Image reveals: uncover with clip-path while the content settles from 1.1 to 1.
