@@ -21,7 +21,9 @@ const rotating = ['clarity', 'discipline', 'a plan', 'confidence'];
 <Base>
   <!-- Hero: wordmark + statement, shares the first screen with the nav -->
   <section class="hero bg-dark">
-    <p class="hero__wordmark" data-wordmark aria-hidden="true"><span>TRA</span>DOT</p>
+    <p class="hero__wordmark" data-wordmark aria-hidden="true">
+      {'TRADOT'.split('').map((c, i) => <span class:list={['wm-char', i < 3 && 'wm-char--cyan']} data-wm-char>{c}</span>)}
+    </p>
 
     <div class="container hero__bottom">
       <h1 class="h1 hero__title">
@@ -168,7 +170,8 @@ const rotating = ['clarity', 'discipline', 'a plan', 'confidence'];
     color: var(--on-dark);
     will-change: transform;
   }
-  .hero__wordmark span { color: var(--cyan); }
+  .wm-char { display: inline-block; transform-origin: 50% 90%; }
+  .wm-char--cyan { color: var(--cyan); }
   /* Above the fixed nav while it travels into the logo spot; hidden under the open mobile menu. */
   .hero__wordmark { position: relative; z-index: 60; }
   :global(body:has(.nav.is-open)) .hero__wordmark { visibility: hidden; }

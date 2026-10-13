@@ -6,6 +6,7 @@
 //   [data-statement] cyan circle grows with scroll (pinned)
 //   [data-img-reveal] clip-path uncover + scale 1.1 → 1
 //   [data-cursor]    custom dot cursor (fine pointers only)
+//   hover play       magnetic .btn/.chip/.wa-float, [data-wm-char] letter bounce, [data-tilt] cards
 // Initial hidden states are set here, so content shows without JS.
 
 import { gsap, ScrollTrigger, SplitText, onPageMotion } from './motion';
@@ -192,4 +193,62 @@ onPageMotion(({ reduced, finePointer }) => {
     document.documentElement.removeEventListener('pointerleave', leave);
     document.documentElement.classList.remove('has-cursor');
   };
+});
+
+// Hover play, mouse devices only (never touch, never reduced motion):
+//   magnetic buttons, bouncing wordmark letters, cards that tilt toward the cursor.
+onPageMotion(({ reduced, finePointer }) => {
+  if (reduced || !finePointer) return;
+  const off: (() => void)[] = [];
+  const on = <K extends keyof HTMLElementEventMap>(el: HTMLElement, type: K, fn: (e: HTMLElementEventMap[K]) => void) => {
+    el.addEventListener(type, fn);
+    off.push(() => el.removeEventListener(type, fn));
+  };
+
+  // Magnetic: the element leans toward the cursor and springs back on leave.
+  gsap.utils.toArray<HTMLElement>('.btn, .wa-float, .chip').forEach((el) => {
+    el.classList.add('is-magnetic');
+    off.push(() => el.classList.remove('is-magnetic'));
+    const pull = el.classList.contains('wa-float') ? 0.45 : 0.3;
+    const x = gsap.quickTo(el, 'x', { duration: 0.8, ease: 'elastic.out(1, 0.35)' });
+    const y = gsap.quickTo(el, 'y', { duration: 0.8, ease: 'elastic.out(1, 0.35)' });
+    on(el, 'pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      x((e.clientX - (r.left + r.width / 2)) * pull);
+      y((e.clientY - (r.top + r.height / 2)) * pull);
+    });
+    on(el, 'pointerleave', () => {
+      x(0);
+      y(0);
+    });
+  });
+
+  // Wordmark letters hop and wobble as the cursor passes over them.
+  gsap.utils.toArray<HTMLElement>('[data-wm-char]').forEach((char) => {
+    on(char, 'pointerenter', () => {
+      if (gsap.isTweening(char)) return;
+      gsap
+        .timeline()
+        .to(char, { yPercent: -16, rotation: gsap.utils.random(-10, 10), scaleY: 1.08, duration: 0.18, ease: 'power2.out' })
+        .to(char, { yPercent: 0, rotation: 0, scaleY: 1, duration: 1, ease: 'elastic.out(1.1, 0.3)' });
+    });
+  });
+
+  // Tilt: cards rotate slightly toward the cursor in 3D.
+  gsap.utils.toArray<HTMLElement>('[data-tilt]').forEach((card) => {
+    gsap.set(card, { transformPerspective: 900 });
+    const rx = gsap.quickTo(card, 'rotationX', { duration: 0.5, ease: 'power3.out' });
+    const ry = gsap.quickTo(card, 'rotationY', { duration: 0.5, ease: 'power3.out' });
+    on(card, 'pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      ry(((e.clientX - r.left) / r.width - 0.5) * 10);
+      rx(-((e.clientY - r.top) / r.height - 0.5) * 10);
+    });
+    on(card, 'pointerleave', () => {
+      rx(0);
+      ry(0);
+    });
+  });
+
+  return () => off.forEach((fn) => fn());
 });

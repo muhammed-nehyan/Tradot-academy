@@ -9,7 +9,7 @@ interface Props {
 const { item, as: Heading = 'h3' } = Astro.props;
 ---
 
-<a class="news-card" href={item.link} target="_blank" rel="noopener nofollow" data-source={item.source} data-reveal>
+<a class="news-card" href={item.link} target="_blank" rel="noopener nofollow" data-source={item.source} data-reveal data-tilt>
   <span class="label news-card__src"><i aria-hidden="true"></i>{item.source}</span>
   <Heading class="news-card__title">{item.title}</Heading>
   {item.date && <time class="news-card__time" datetime={item.date.toISOString()}>{formatNewsTime(item.date)} IST</time>}

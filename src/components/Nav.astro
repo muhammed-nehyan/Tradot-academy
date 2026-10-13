@@ -16,7 +16,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
       {
         navLinks.map(({ href, label }) => (
           <a href={href} aria-current={isActive(href) ? 'page' : undefined}>
-            {label}
+            <span class="roll"><span>{label}</span></span>
           </a>
         ))
       }

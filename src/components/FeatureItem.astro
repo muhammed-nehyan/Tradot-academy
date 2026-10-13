@@ -33,5 +33,8 @@ const { icon, title } = Astro.props;
     color: var(--accent);
   }
   :global(.bg-dark) .feature__badge { background: rgba(0, 184, 212, 0.12); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .feature:hover .feature__badge { animation: jiggle 0.7s var(--ease-out); }
+  }
   .feature__title { font-size: 19px; font-weight: 700; line-height: 1.3; }
 </style>

@@ -14,7 +14,7 @@ const { href, variant = 'primary', external = false, class: className } = Astro.
   class:list={['btn', `btn--${variant}`, className]}
   {...external && { target: '_blank', rel: 'noopener' }}
 >
-  <slot />
+  <span class="roll"><span><slot /></span></span>
 </a>
 
 <style>
@@ -32,8 +32,10 @@ const { href, variant = 'primary', external = false, class: className } = Astro.
     white-space: nowrap;
     transition: transform 0.3s var(--ease-out), opacity 0.3s;
   }
-  .btn:hover { transform: translateY(-2px); }
-  .btn:active { transform: translateY(0); }
+  /* JS adds .is-magnetic on mouse devices and drives the transform itself. */
+  .btn:not(:global(.is-magnetic)):hover { transform: translateY(-2px); }
+  .btn:not(:global(.is-magnetic)):active { transform: translateY(0); }
+  .btn:global(.is-magnetic) { transition: opacity 0.3s; }
 
   .btn--primary { background: var(--cyan); color: var(--ink); }
   .btn--dark { background: var(--ink); color: var(--on-dark); }

@@ -219,3 +219,24 @@ html.lenis, html.lenis body { height: auto; }
   background: var(--cyan);
   pointer-events: none;
 }
+
+/* ---------- Hover play (hover devices only, never with reduced motion) ---------- */
+@keyframes jiggle {
+  0% { transform: rotate(0) scale(1); }
+  15% { transform: rotate(-12deg) scale(1.1); }
+  30% { transform: rotate(10deg) scale(1.1); }
+  45% { transform: rotate(-7deg) scale(1.06); }
+  60% { transform: rotate(5deg) scale(1.03); }
+  75% { transform: rotate(-2deg); }
+  100% { transform: rotate(0) scale(1); }
+}
+
+/* Rolling label: the text-shadow copy sits one line below and slides up on hover. */
+.roll { display: inline-block; overflow: hidden; vertical-align: top; line-height: 1.2; }
+.roll > span { display: inline-block; text-shadow: 0 1.3em currentColor; }
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .roll > span { transition: transform 0.5s var(--ease-out); }
+  a:hover > .roll > span,
+  .btn:hover .roll > span { transform: translateY(-1.3em); }
+}
