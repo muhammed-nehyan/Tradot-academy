@@ -261,3 +261,4 @@ html[data-theme='light'] {
 }
 html[data-theme='light'] :is(.bg-dark, .nav) { --accent: var(--cyan-on-light); }
 html[data-theme='light'] .nav.is-scrolled { box-shadow: 0 1px 0 var(--border), 0 8px 24px rgba(15, 23, 31, 0.06); }
+html[data-theme='light'] .footer { border-top: 1px solid var(--border); }
