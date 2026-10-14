@@ -1,5 +1,5 @@
 ---
-import { site, navLinks, legalLinks, whatsappLink, addressLines, mapDirectionsUrl } from '../data/site';
+import { site, navLinks, legalLinks, whatsappLink, addressLines, mapDirectionsUrl, logoSrc } from '../data/site';
 
 const year = new Date().getFullYear();
 ---
@@ -9,7 +9,7 @@ const year = new Date().getFullYear();
     <div class="footer__top">
       <div class="footer__brand">
         <a href="/" aria-label="Tradot Academy home">
-          <img src="/logo-white.webp" alt="Tradot Academy" width="320" height="182" loading="lazy" />
+          <img src={logoSrc} alt="Tradot Academy" width="320" height="182" loading="lazy" />
         </a>
         <p class="body">Practical stock market education with a focus on discipline and risk management.</p>
       </div>
@@ -66,7 +66,7 @@ const year = new Date().getFullYear();
   .footer__cols li { margin-bottom: 10px; }
   .footer__cols a,
   .footer__cols span { color: var(--on-dark-muted); font-size: 15px; transition: color 0.2s; }
-  .footer__cols a:hover { color: var(--cyan); }
+  .footer__cols a:hover { color: var(--accent); }
   .footer__cols .footer__address { display: flex; flex-direction: column; line-height: 1.6; }
   .footer__cols .footer__address span { color: inherit; }
 

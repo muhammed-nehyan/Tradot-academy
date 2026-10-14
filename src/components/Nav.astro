@@ -1,6 +1,6 @@
 ---
 import Button from './Button.astro';
-import { navLinks } from '../data/site';
+import { navLinks, logoSrc } from '../data/site';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
@@ -9,7 +9,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
 <header class="nav" data-nav>
   <div class="container nav__inner">
     <a href="/" class="nav__logo" aria-label="Tradot Academy home" data-nav-logo>
-      <img src="/logo-white.webp" alt="Tradot Academy" width="320" height="182" />
+      <img src={logoSrc} alt="Tradot Academy" width="320" height="182" />
     </a>
 
     <nav aria-label="Main" class="nav__links" id="nav-menu" data-nav-menu>
@@ -49,7 +49,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   }
   /* Set from JS once the page scrolls past the top. */
   .nav.is-scrolled {
-    background: var(--ink);
+    background: var(--nav-bg);
     box-shadow: 0 1px 0 var(--border-dark);
   }
 
@@ -89,7 +89,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     transform: scaleX(1);
     transform-origin: left;
   }
-  .nav__links a[aria-current='page'] { color: var(--cyan); font-weight: 700; }
+  .nav__links a[aria-current='page'] { color: var(--accent); font-weight: 700; }
 
   .nav__links :global(.nav__cta-mobile) { display: none; }
 
@@ -123,7 +123,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
       align-items: flex-start;
       gap: 8px;
       padding: 32px var(--gutter);
-      background: var(--ink);
+      background: var(--nav-bg);
       font-family: var(--font-display);
       font-weight: 800;
       font-size: 32px;
@@ -135,7 +135,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     .nav__links a:not(:global(.btn))::after { display: none; }
     .nav__links :global(.nav__cta-mobile) { display: inline-flex; margin-top: 24px; font-family: var(--font-body); }
 
-    .nav.is-open { background: var(--ink); }
+    .nav.is-open { background: var(--nav-bg); }
     .nav.is-open .nav__links {
       visibility: visible;
       opacity: 1;

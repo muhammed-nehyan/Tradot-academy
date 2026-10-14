@@ -1,5 +1,14 @@
 // Site-wide facts. Program details (fee, modules, FAQ) go in program.ts.
 
+/**
+ * Colour theme. 'dark' = ink heroes and footer; 'light' = all-light sections.
+ * Everything else is shared, so switching is this one line.
+ */
+export const THEME: 'dark' | 'light' = 'dark';
+
+/** Logo variant that reads on the theme's nav and footer. */
+export const logoSrc = THEME === 'light' ? '/logo.webp' : '/logo-white.webp';
+
 export const site = {
   name: 'Tradot Academy',
   phoneDisplay: '+91 96458 86344',

@@ -18,6 +18,10 @@
   /* Accent for text: brand cyan on dark, a deeper teal on light (WCAG AA). */
   --cyan-on-light: #007C8F;
   --accent: var(--cyan-on-light);
+  /* Surfaces that are dark in the dark theme (remapped by the light theme below). */
+  --section-dark: var(--ink);
+  --nav-bg: var(--ink);
+  --statement-bg: var(--ink);
 
   /* Type */
   --font-display: 'Archivo', system-ui, sans-serif;
@@ -133,7 +137,9 @@ html.lenis, html.lenis body { height: auto; }
 /* Hero shares the first screen with the fixed nav. */
 .screen--hero { padding-top: calc(var(--nav-h) + 32px); }
 
-.bg-dark { --accent: var(--cyan); background: var(--ink); color: var(--on-dark); }
+.bg-dark { background: var(--section-dark); color: var(--on-dark); }
+.bg-dark,
+.nav { --accent: var(--cyan); }
 .bg-subtle { background: var(--subtle); }
 .bg-white { background: var(--surface); }
 
@@ -240,3 +246,18 @@ html.lenis, html.lenis body { height: auto; }
   a:hover > .roll > span,
   .btn:hover .roll > span { transform: translateY(-1.3em); }
 }
+
+/* ---------- Light theme (THEME = 'light' in src/data/site.ts) ----------
+   The "dark" tokens become light ones, so .bg-dark sections, the nav, footer and
+   cards turn light without per-component changes. */
+html[data-theme='light'] {
+  --section-dark: #EAF5F8;
+  --nav-bg: rgba(255, 255, 255, 0.96);
+  --statement-bg: var(--surface);
+  --ink-raised: #FFFFFF;
+  --on-dark: var(--text);
+  --on-dark-muted: var(--muted);
+  --border-dark: #D3E2E8;
+}
+html[data-theme='light'] :is(.bg-dark, .nav) { --accent: var(--cyan-on-light); }
+html[data-theme='light'] .nav.is-scrolled { box-shadow: 0 1px 0 var(--border), 0 8px 24px rgba(15, 23, 31, 0.06); }
