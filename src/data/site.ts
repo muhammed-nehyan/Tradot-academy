@@ -4,7 +4,7 @@
  * Colour theme. 'dark' = ink heroes and footer; 'light' = all-light sections.
  * Everything else is shared, so switching is this one line.
  */
-export const THEME: 'dark' | 'light' = 'dark';
+export const THEME: 'dark' | 'light' = 'light';
 
 /** Logo variant that reads on the theme's nav and footer. */
 export const logoSrc = THEME === 'light' ? '/logo.webp' : '/logo-white.webp';
