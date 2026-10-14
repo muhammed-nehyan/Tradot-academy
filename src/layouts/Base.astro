@@ -37,8 +37,10 @@ const orgSchema = {
   telephone: site.phoneDisplay.replace(/\s/g, ''),
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Kalamassery, Kochi',
-    addressRegion: 'Kerala',
+    streetAddress: site.address.street,
+    addressLocality: site.address.locality,
+    addressRegion: site.address.region,
+    postalCode: site.address.postalCode,
     addressCountry: 'IN',
   },
 };

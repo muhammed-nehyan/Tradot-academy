@@ -2,10 +2,9 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import ContactForm from '../components/ContactForm.astro';
-import { site, whatsappLink } from '../data/site';
+import { site, whatsappLink, addressLines, mapEmbedUrl, mapDirectionsUrl } from '../data/site';
 
-// TODO(client): exact street address, Google Maps link, email and hours.
-const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(site.location)}&z=14&output=embed`;
+// TODO(client): email and opening hours.
 ---
 
 <Base
@@ -37,7 +36,11 @@ const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(site.locatio
         </li>
         <li data-reveal>
           <Icon name="pin" />
-          <div><p class="label">Visit</p><span>{site.location}</span></div>
+          <div>
+            <p class="label">Visit</p>
+            <address>{addressLines.map((l) => <span>{l}</span>)}</address>
+            <a class="directions" href={mapDirectionsUrl} target="_blank" rel="noopener">Get directions</a>
+          </div>
         </li>
       </ul>
     </div>
@@ -55,11 +58,13 @@ const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(site.locatio
       <div class="contact-main__map">
         <iframe
           title={`Map of ${site.location}`}
-          src={mapSrc}
+          src={mapEmbedUrl}
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
           allowfullscreen></iframe>
-        <p class="label map-note"><Icon name="pin" size={16} /> {site.location}</p>
+        <a class="label map-note" href={mapDirectionsUrl} target="_blank" rel="noopener"
+          ><Icon name="pin" size={16} /> {addressLines.join(', ')}</a
+        >
       </div>
     </div>
   </section>
@@ -86,6 +91,9 @@ const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(site.locatio
   .details .label { color: var(--on-dark-muted); margin-bottom: 4px; }
   .details a, .details span { font-size: 20px; font-weight: 700; }
   .details a:hover { color: var(--cyan); }
+  .details address { display: flex; flex-direction: column; font-style: normal; font-size: 18px; font-weight: 700; line-height: 1.4; }
+  .details address span { font-size: inherit; }
+  .details .directions { display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 
   .contact-main { align-items: stretch; }
   .contact-main__form { display: flex; flex-direction: column; gap: 18px; }

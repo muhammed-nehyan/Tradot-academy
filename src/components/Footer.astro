@@ -1,5 +1,5 @@
 ---
-import { site, navLinks, legalLinks, whatsappLink } from '../data/site';
+import { site, navLinks, legalLinks, whatsappLink, addressLines, mapDirectionsUrl } from '../data/site';
 
 const year = new Date().getFullYear();
 ---
@@ -32,7 +32,11 @@ const year = new Date().getFullYear();
           <ul role="list">
             <li><a href={site.phoneHref}>{site.phoneDisplay}</a></li>
             <li><a href={whatsappLink()} target="_blank" rel="noopener">WhatsApp us</a></li>
-            <li><span>{site.location}</span></li>
+            <li>
+              <a href={mapDirectionsUrl} target="_blank" rel="noopener" class="footer__address">
+                {addressLines.map((l) => <span>{l}</span>)}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -63,6 +67,8 @@ const year = new Date().getFullYear();
   .footer__cols a,
   .footer__cols span { color: var(--on-dark-muted); font-size: 15px; transition: color 0.2s; }
   .footer__cols a:hover { color: var(--cyan); }
+  .footer__cols .footer__address { display: flex; flex-direction: column; line-height: 1.6; }
+  .footer__cols .footer__address span { color: inherit; }
 
   .footer__disclaimer {
     margin-top: 40px;
